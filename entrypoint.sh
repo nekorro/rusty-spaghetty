@@ -16,11 +16,6 @@ if [[ -z "${V2_PATH}" ]]; then
 fi
 echo ${V2_PATH}
 
-if [[ -z "${QR_PATH}" ]]; then
-  export QR_PATH="/qr_img"
-fi
-echo ${QR_PATH}
-
 case "$APP_NAME" in
 	*.*)
 		export DOMAIN="$APP_NAME"
@@ -43,7 +38,8 @@ ss="ss://$(echo -n ${ENCRYPT}:${SS_PASSWORD} | base64 -w 0)@${DOMAIN}:443?plugin
 echo -n "${ss}"
 echo -n "${ss}" | qrencode -t ansiutf8
 
-if [ "$IS_QR_PUBLIC" = "true" ]; then
+if [[ ! -z "${QR_PATH}" ]]; then
+  echo ${QR_PATH}
   echo "Generating QR-code png"
   [ ! -d /wwwroot/${QR_PATH} ] && mkdir /wwwroot/${QR_PATH}
   echo "${ss}" | tr -d '\n' > /wwwroot/${QR_PATH}/index.html

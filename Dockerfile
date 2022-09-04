@@ -1,1 +1,1 @@
-FROM nekoro/rusty-spaghetty:v0.3.0
+FROM nekorro/rusty-spaghetty:v0.3.0
