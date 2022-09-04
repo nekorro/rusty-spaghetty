@@ -9,10 +9,8 @@ server {
     location / {
         return 403;
     }
-    location ${QR_Path} {
-        root /wwwroot;
-    }
-    location = /${V2_Path} {
+    ${QR_LOCATION}
+    location = /${V2_PATH} {
         if (\$http_upgrade != "websocket") { # WebSocket return this when negotiation fails 404
             return 404;
         }

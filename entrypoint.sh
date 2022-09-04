@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [[ -z "${SS_PASSWORD}" ]]; then
-  export PASSWORD="5c301bb8-6c77-41a0-a606-4ba11bbab084"
+  export SS_PASSWORD="5c301bb8-6c77-41a0-a606-4ba11bbab084"
 fi
 echo ${SS_PASSWORD}
 
@@ -22,14 +22,15 @@ if [[ -z "${DOMAIN}" ]]; then
 fi
 echo ${DOMAIN}
 
-sh /conf/shadowsocks_config.tpl >  /etc/shadowsocks/config.json
-echo /etc/shadowsocks/config.json
-cat /etc/shadowsocks/config.json
+if [[ -z "${PORT}" ]]; then
+  export PORT="80"
+fi
+echo ${PORT}
 
-rm -f /etc/nginx/conf.d/*
-sh /conf/nginx_ss.tpl > /etc/nginx/conf.d/ss.conf
-echo /etc/nginx/conf.d/ss.conf
-cat /etc/nginx/conf.d/ss.conf
+if [[ -z "${QR_PATH}" ]]; then
+  export QR_PATH="qweqwe"
+fi
+echo ${QR_PATH}
 
 plugin=$(echo -n "v2ray;path=/${V2_PATH};host=${DOMAIN};tls" | sed -e 's/\//%2F/g' -e 's/=/%3D/g' -e 's/;/%3B/g')
 ss="ss://$(echo -n ${ENCRYPT}:${SS_PASSWORD} | base64 -w 0)@${DOMAIN}:443?plugin=${plugin}"
@@ -43,9 +44,23 @@ if [[ ! -z "${QR_PATH}" ]]; then
   echo "${ss}" | tr -d '\n' > /wwwroot/${QR_PATH}/index.html
   echo -n "${ss}" | qrencode -s 6 -o /wwwroot/${QR_PATH}/vpn.png
   ls -lah /wwwroot/${QR_PATH}/vpn.png
+  echo "QR LOCATION:"
+  sh /conf/nginx_qr.tpl
+  export QR_LOCATION=`sh /conf/nginx_qr.tpl`
 else
-  echo "Do not generate QR-code png"
+  echo "No QR-code png"
 fi
 
+sh /conf/shadowsocks_config.tpl >  /etc/shadowsocks/config.json
+echo /etc/shadowsocks/config.json
+cat /etc/shadowsocks/config.json
+
+rm -f /etc/nginx/conf.d/*
+sh /conf/nginx_ss.tpl > /etc/nginx/conf.d/ss.conf
+echo /etc/nginx/conf.d/ss.conf
+cat /etc/nginx/conf.d/ss.conf
+
+echo "SS SERVER RUN"
 /ssbin/ssserver -c /etc/shadowsocks/config.json &
-/docker-entrypoint.sh
+echo "NGINX RUN"
+/docker-entrypoint.sh nginx -g 'daemon off;'
