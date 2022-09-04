@@ -22,11 +22,12 @@ if [[ -z "${DOMAIN}" ]]; then
 fi
 echo ${DOMAIN}
 
-sh /conf/shadowsocks_config.json >  /etc/shadowsocks/config.json
+sh /conf/shadowsocks_config.tpl >  /etc/shadowsocks/config.json
 echo /etc/shadowsocks/config.json
 cat /etc/shadowsocks/config.json
 
-sh /conf/nginx_ss.conf > /etc/nginx/conf.d/ss.conf
+rm -f /etc/nginx/conf.d/*
+sh /conf/nginx_ss.tpl > /etc/nginx/conf.d/ss.conf
 echo /etc/nginx/conf.d/ss.conf
 cat /etc/nginx/conf.d/ss.conf
 
@@ -36,8 +37,8 @@ echo -n "${ss}"
 echo -n "${ss}" | qrencode -t ansiutf8
 
 if [[ ! -z "${QR_PATH}" ]]; then
-  echo ${QR_PATH}
   echo "Generating QR-code png"
+  echo ${QR_PATH}
   [ ! -d /wwwroot/${QR_PATH} ] && mkdir /wwwroot/${QR_PATH}
   echo "${ss}" | tr -d '\n' > /wwwroot/${QR_PATH}/index.html
   echo -n "${ss}" | qrencode -s 6 -o /wwwroot/${QR_PATH}/vpn.png
@@ -47,5 +48,4 @@ else
 fi
 
 /ssbin/ssserver -c /etc/shadowsocks/config.json &
-rm -rf /etc/nginx/sites-enabled/default
-nginx -g 'daemon off;'
+/docker-entrypoint.sh
