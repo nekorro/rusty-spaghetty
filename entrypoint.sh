@@ -13,7 +13,7 @@ echo ${V2_PATH}
 export DOMAIN=${DOMAIN:-"unknown.domain.null"}
 echo ${DOMAIN}
 
-export PORT=${PORT:-"80"}
+export PORT=${PORT:-"443"}
 echo ${PORT}
 
 export QR_PATH=${QR_PATH:-"qwe"}
