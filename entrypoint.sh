@@ -1,36 +1,24 @@
 #!/bin/sh
 
-if [[ -z "${SS_PASSWORD}" ]]; then
-  export SS_PASSWORD="5c301bb8-6c77-41a0-a606-4ba11bbab084"
-fi
+export SS_PASSWORD=${SS_PASSWORD:-"5c301bb8-6c77-41a0-a606-4ba11bbab084"}
 echo ${SS_PASSWORD}
-
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
 
-if [[ -z "${ENCRYPT}" ]]; then
-  export ENCRYPT="chacha20-ietf-poly1305"
-fi
+export ENCRYPT=${ENCRYPT:-"chacha20-ietf-poly1305"}
 echo ${ENCRYPT}
 
-if [[ -z "${V2_PATH}" ]]; then
-  export V2_PATH="s233"
-fi
+export V2_PATH=${V2_PATH:-"s233"}
 echo ${V2_PATH}
 
-if [[ -z "${DOMAIN}" ]]; then
-  export DOMAIN="unknown.domain.null"
-fi
+export DOMAIN=${DOMAIN:-"unknown.domain.null"}
 echo ${DOMAIN}
 
-if [[ -z "${PORT}" ]]; then
-  export PORT="80"
-fi
+export PORT=${PORT:-"80"}
 echo ${PORT}
 
-if [[ -z "${QR_PATH}" ]]; then
-  export QR_PATH="qweqwe"
-fi
-echo ${QR_PATH}
+export QR_PATH=${QR_PATH:-"qwe"}
+
+export NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE="yes please"
 
 plugin=$(echo -n "v2ray;path=/${V2_PATH};host=${DOMAIN};tls" | sed -e 's/\//%2F/g' -e 's/=/%3D/g' -e 's/;/%3B/g')
 ss="ss://$(echo -n ${ENCRYPT}:${SS_PASSWORD} | base64 -w 0)@${DOMAIN}:443?plugin=${plugin}"
@@ -44,21 +32,17 @@ if [[ ! -z "${QR_PATH}" ]]; then
   echo "${ss}" | tr -d '\n' > /wwwroot/${QR_PATH}/index.html
   echo -n "${ss}" | qrencode -s 6 -o /wwwroot/${QR_PATH}/vpn.png
   ls -lah /wwwroot/${QR_PATH}/vpn.png
-  echo "QR LOCATION:"
-  sh /conf/nginx_qr.tpl
-  export QR_LOCATION=`sh /conf/nginx_qr.tpl`
+  export QR_LOCATION="include /etc/nginx/conf.d/nginx_qr.inc;"
 else
   echo "No QR-code png"
+  export QR_LOCATION=""
 fi
 
-sh /conf/shadowsocks_config.tpl >  /etc/shadowsocks/config.json
+sh /conf/shadowsocks.conf.template >  /etc/shadowsocks/config.json
 echo /etc/shadowsocks/config.json
 cat /etc/shadowsocks/config.json
 
-rm -f /etc/nginx/conf.d/*
-sh /conf/nginx_ss.tpl > /etc/nginx/conf.d/ss.conf
-echo /etc/nginx/conf.d/ss.conf
-cat /etc/nginx/conf.d/ss.conf
+rm -f /etc/nginx/conf.d/* && mkdir -p /etc/nginx/templates/ && mv /conf/nginx*.template /etc/nginx/templates/
 
 echo "SS SERVER RUN"
 /ssbin/ssserver -c /etc/shadowsocks/config.json &
