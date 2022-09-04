@@ -10,20 +10,17 @@ export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
 if [[ -z "${ENCRYPT}" ]]; then
   export ENCRYPT="chacha20-ietf-poly1305"
 fi
+echo ${ENCRYPT}
 
 if [[ -z "${V2_PATH}" ]]; then
   export V2_PATH="s233"
 fi
 echo ${V2_PATH}
 
-case "$APP_NAME" in
-	*.*)
-		export DOMAIN="$APP_NAME"
-		;;
-	*)
-		export DOMAIN="$APP_NAME.herokuapp.com"
-		;;
-esac
+if [[ -z "${DOMAIN}" ]]; then
+  export DOMAIN="unknown.domain.null"
+fi
+echo ${DOMAIN}
 
 sh /conf/shadowsocks_config.json >  /etc/shadowsocks/config.json
 echo /etc/shadowsocks/config.json
