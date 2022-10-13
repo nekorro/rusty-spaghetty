@@ -5,7 +5,7 @@ server {
     root /wwwroot;
 
     location / {
-        return 403;
+        return 200;
     }
 
     location = /${V2_PATH} {
