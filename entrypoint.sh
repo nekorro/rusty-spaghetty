@@ -21,7 +21,7 @@ export QR_PATH=${QR_PATH}
 
 export NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE="yes please"
 
-plugin=$(echo -n "v2ray;path=/${V2_PATH};host=${DOMAIN};tls" | sed -e 's/\//%2F/g' -e 's/=/%3D/g' -e 's/;/%3B/g')
+plugin=$(echo -n "v2ray-plugin;path=/${V2_PATH};host=${DOMAIN};tls" | sed -e 's/\//%2F/g' -e 's/=/%3D/g' -e 's/;/%3B/g')
 ss="ss://${ENCRYPT}:${SS_PASSWORD_PE}@${DOMAIN}:${PORT}?plugin=${plugin}"
 echo "${ss}"
 echo "${ss}" | qrencode -t ansiutf8
