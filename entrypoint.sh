@@ -17,7 +17,7 @@ echo ${DOMAIN}
 export PORT=${PORT:-"443"}
 echo ${PORT}
 
-export QR_PATH=${QR_PATH:-"qwe"}
+export QR_PATH=${QR_PATH}
 
 export NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE="yes please"
 
