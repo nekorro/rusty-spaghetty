@@ -1,5 +1,7 @@
 #!/bin/sh
 
+ls -lah /ssbin
+
 export SS_PASSWORD=${SS_PASSWORD:-"5c301bb8-6c77-41a0-a606-4ba11bbab084"}
 echo ${SS_PASSWORD}
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
