@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ls -lah /ssbin
+/ssbin/ssservice genkey -m "2022-blake3-chacha20-poly1305"
 
 export SS_PASSWORD=${SS_PASSWORD:-"5c301bb8-6c77-41a0-a606-4ba11bbab084"}
 echo ${SS_PASSWORD}
