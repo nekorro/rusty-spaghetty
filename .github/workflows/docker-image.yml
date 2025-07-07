@@ -1,8 +1,8 @@
-name: Docker Image CI
+name: Build roasted 2022
 
 on:
   push:
-    branches: [ "master", "test-2022-ciphers"]
+    branches: [ "2022"]
 
 jobs:
   build:
@@ -14,7 +14,7 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted:${{ github.sha }}
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted-2022:${{ github.sha }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted-2022:${{ github.sha }}
