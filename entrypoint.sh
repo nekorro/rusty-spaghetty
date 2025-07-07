@@ -6,7 +6,6 @@ echo ${ENCRYPT}
 export SS_PASSWORD="$(/ssbin/ssservice genkey -m "$ENCRYPT")"
 echo ${SS_PASSWORD}
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
-echo ${SS_PASSWORD_JSON}
 export SS_PASSWORD_PE="$(echo -n "$SS_PASSWORD" | jq -sRr '@uri')"
 
 export V2_PATH=${V2_PATH:-"s233"}
