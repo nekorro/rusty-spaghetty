@@ -1,13 +1,13 @@
 #!/bin/sh
 
-/ssbin/ssservice genkey -m "2022-blake3-chacha20-poly1305"
+export ENCRYPT=${ENCRYPT:-"2022-blake3-chacha20-poly1305"}
+echo ${ENCRYPT}
 
-export SS_PASSWORD=${SS_PASSWORD:-"5c301bb8-6c77-41a0-a606-4ba11bbab084"}
+export SS_PASSWORD="$(/ssbin/ssservice genkey -m "$ENCRYPT")"
 echo ${SS_PASSWORD}
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
-
-export ENCRYPT=${ENCRYPT:-"chacha20-ietf-poly1305"}
-echo ${ENCRYPT}
+echo ${SS_PASSWORD_JSON}
+export SS_PASSWORD_PE="$(echo -n "$SS_PASSWORD" | jq -sRr '@uri')"
 
 export V2_PATH=${V2_PATH:-"s233"}
 echo ${V2_PATH}
@@ -23,7 +23,7 @@ export QR_PATH=${QR_PATH:-"qwe"}
 export NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE="yes please"
 
 plugin=$(echo -n "v2ray;path=/${V2_PATH};host=${DOMAIN};tls" | sed -e 's/\//%2F/g' -e 's/=/%3D/g' -e 's/;/%3B/g')
-ss="ss://$(echo -n ${ENCRYPT}:${SS_PASSWORD} | base64 -w 0)@${DOMAIN}:${PORT}?plugin=${plugin}"
+ss="ss://${ENCRYPT}:${SS_PASSWORD_PE}@${DOMAIN}:${PORT}?plugin=${plugin}"
 echo "${ss}"
 echo "${ss}" | qrencode -t ansiutf8
 
