@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export ENCRYPT=${ENCRYPT:-"2022-blake3-chacha20-poly1305"}
+export ENCRYPT=${ENCRYPT:-"2022-blake3-aes-128-gcm"}
 echo ${ENCRYPT}
 
 export SS_PASSWORD="$(/ssbin/ssservice genkey -m "$ENCRYPT")"
@@ -8,7 +8,7 @@ echo ${SS_PASSWORD}
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
 export SS_PASSWORD_PE="$(echo -n "$SS_PASSWORD" | jq -sRr '@uri')"
 
-export V2_PATH=${V2_PATH:-"s233"}
+export V2_PATH=${V2_PATH:-"nop"}
 echo ${V2_PATH}
 
 export DOMAIN=${DOMAIN:-"unknown.domain.null"}
