@@ -2,7 +2,7 @@ name: Build roasted
 
 on:
   push:
-    branches: [ "master"]
+    branches: [ "cutlet"]
 
 jobs:
   build:
@@ -10,11 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Log in to Cloud Ru Hub
+        run: echo "${{ secrets.CLOUDRU_KEY_SECRET }}" | docker login ${{ secrets.CLOUDRU_REGISTRY }} -u ${{ secrets.CLOUDRU_KEY_ID }} --password-stdin
 
       - name: Build Docker image
-        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted:${{ github.sha }}
+        run: docker build . --file Dockerfile --tag ${{ secrets.CLOUDRU_REGISTRY }}/cutlet-spaghetty:${{ github.sha }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/rusty-spaghetty-roasted:${{ github.sha }}
+        run: docker push ${{ secrets.CLOUDRU_REGISTRY }}/cutlet-spaghetty:${{ github.sha }}

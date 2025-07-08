@@ -1,0 +1,11 @@
+#!/bin/sh
+cat <<EOF
+upstream svc {
+    server ${UPSTREAM};
+}
+
+server {
+    listen ${PORT};
+    proxy_pass svc;
+}
+EOF
