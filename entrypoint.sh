@@ -3,7 +3,8 @@
 export ENCRYPT=${ENCRYPT:-"2022-blake3-aes-128-gcm"}
 echo ${ENCRYPT}
 
-export SS_PASSWORD="$(/ssbin/ssservice genkey -m "$ENCRYPT")"
+#export SS_PASSWORD=${SS_PASSWORD:-(/ssbin/ssservice genkey -m "$ENCRYPT")}
+export SS_PASSWORD=${SS_PASSWORD:-$(/ssbin/ssservice genkey -m "$ENCRYPT")}
 echo ${SS_PASSWORD}
 export SS_PASSWORD_JSON="$(echo -n "$SS_PASSWORD" | jq -Rc)"
 export SS_PASSWORD_PE="$(echo -n "$SS_PASSWORD" | jq -sRr '@uri')"
