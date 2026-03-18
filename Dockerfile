@@ -1,7 +1,7 @@
 FROM nginx:stable-alpine
 
 ARG V2RAY_VERSION=v1.3.2
-ARG SSRUST_VERSION=v1.23.5
+ARG SSRUST_VERSION=v1.24.0
 
 RUN apk --no-cache add jq libqrencode libqrencode-tools
 RUN mkdir -p /etc/shadowsocks /ssbin /wwwroot
