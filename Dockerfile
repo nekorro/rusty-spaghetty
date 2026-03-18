@@ -1,4 +1,4 @@
-FROM nekorro/rusty-spaghetty:cc89675141636caa39b668d8544dc08dfeb3ffd6
+FROM nekorro/rusty-spaghetty:d8335f21622a5f63d3abe9218829e8de74ac19ce
 COPY conf/ /conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
